@@ -20,4 +20,6 @@ def qini_coefficient(df: pd.DataFrame, uplift: np.ndarray, t: str = "t", y: str 
     curve = uplift_curve(df, uplift, t=t, y=y)
     x = np.linspace(0, 1, len(curve))
     yvals = curve["uplift"].to_numpy()
-    return float(np.trapz(yvals, x))
+    # np.trapz was removed in NumPy 2.0; np.trapezoid is the current name.
+    trap = getattr(np, "trapezoid", getattr(np, "trapz", None))
+    return float(trap(yvals, x))

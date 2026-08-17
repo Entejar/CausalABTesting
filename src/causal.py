@@ -6,7 +6,6 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression, Ridge
 from sklearn.ensemble import RandomForestRegressor
-from xgboost import XGBRegressor
 
 def _features(df: pd.DataFrame, cols: list[str]) -> np.ndarray:
     return df[cols].to_numpy()
@@ -28,6 +27,7 @@ def aipw_ate(df: pd.DataFrame, y: str, t: str, X: list[str]) -> float:
 
 def t_learner_cate(df: pd.DataFrame, y: str, t: str, X: list[str], model="xgb") -> np.ndarray:
     if model == "xgb":
+        from xgboost import XGBRegressor  # lazy: RF path works without xgboost installed
         f0 = XGBRegressor(n_estimators=300, max_depth=5, learning_rate=0.05,
                           subsample=0.9, colsample_bytree=0.9, reg_lambda=1.0,
                           n_jobs=-1, random_state=13)
